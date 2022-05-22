@@ -1,7 +1,6 @@
 ﻿using ASPNetCoreAPI.Entities;
 using ASPNetCoreAPI.Models;
 using AutoMapper;
-using Microsoft.Build.Framework;
 
 namespace ASPNetCoreAPI.Core
 {

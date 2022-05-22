@@ -43,22 +43,15 @@ namespace ASPNetCoreAPI.Services
             {
                 throw new KeyNotFoundException("UserEntities is not found");
             }
-            UserEntity user = _context.UserEntities.Find(id);
-            if (user == null)
-            {
-                throw new KeyNotFoundException("User entity is not found");
-            }
-
+            UserEntity user = _context.UserEntities.Find(id) 
+                              ?? throw new KeyNotFoundException("User entity is not found");
             return user;
         }
 
         public UserAuthenticateResponse Authenticate(UserAuthenticateRequest model)
         {
-            UserEntity user = _context.UserEntities.SingleOrDefault(x => x.Username == model.Username);
-            if (user == null)
-            {
-                throw new BadHttpRequestException("Username or password is incorrect");
-            }
+            UserEntity user = _context.UserEntities.SingleOrDefault(x => x.Username == model.Username)
+                              ?? throw new BadHttpRequestException("Username or password is incorrect");
 
             var response = _mapper.Map<UserAuthenticateResponse>(user);
             response.AccessToken = _jwtUtils.GenerateAccessToken(user);

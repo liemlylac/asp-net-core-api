@@ -26,21 +26,16 @@ namespace ASPNetCoreAPI.Core
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-                switch(exception)
+                response.StatusCode = exception switch
                 {
-                    case AppException e:
+                    AppException e =>
                         // custom application error
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case KeyNotFoundException e:
+                        (int) HttpStatusCode.BadRequest,
+                    KeyNotFoundException e =>
                         // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                    default:
-                        // unhandled error
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
-                }
+                        (int) HttpStatusCode.NotFound,
+                    _ => (int) HttpStatusCode.InternalServerError
+                };
 
                 var result = JsonSerializer.Serialize(new { message = exception?.Message });
                 await response.WriteAsync(result);
